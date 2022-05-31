@@ -65,6 +65,26 @@ class _TodoListPageState extends State<TodoListPage> {
     return await _channel.invokeMethod("test01");
   }
 
+  Future<dynamic> _platformCallHandler(MethodCall call) async {
+    switch (call.method) {
+      case 'callMe':
+        print('call callMe : arguments = ${call.arguments}');
+        return Future.value('called from platform!');
+    //return Future.error('error message!!');
+      default:
+        print('Unknowm method ${call.method}');
+        throw MissingPluginException();
+        break;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Platforms -> Dart
+    _channel.setMethodCallHandler(_platformCallHandler);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
